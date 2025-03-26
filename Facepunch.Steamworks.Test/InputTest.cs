@@ -49,7 +49,7 @@ namespace Steamworks
 				var dstate = controller.GetDigitalState( "fire" );
 				var astate = controller.GetAnalogState( "Move" );
 			}
-=
+
 			CollectionAssert.AreEqual( SteamInput.Controllers.ToList(), controllers );
 		}
 
