@@ -42,5 +42,39 @@ namespace Steamworks
 			
 			CollectionAssert.AreEqual( SteamInput.Controllers.ToList(), controllers );
 		}
+
+		[TestMethod]
+		public void ControllerAllocates()
+		{
+			bool allocates = Allocates( () => _ = SteamInput.Controllers );
+			Assert.IsTrue( allocates , "Expected default SteamInput.Controllers to allocate");
+		}
+
+		[TestMethod]
+		public void ControllerListNoAllocDoesNotAllocate()
+		{
+			// Ensure list is big enough to fit all possible controllers
+			// so allocation of list isn't a concern
+			List<Controller> controllers = new List<Controller>( 1_000 );
+			bool allocates = Allocates( () => SteamInput.GetControllerNoAlloc( controllers ) );
+			Assert.IsFalse( allocates , 
+				"Expected new allocation-free SteamInput.GetControllerNoAlloc to not allocate");
+		}
+
+		// Best guess at allocation test, need NUnit's Is.Not.AllocatingGCMemory() if we want 
+		// something better
+		private static bool Allocates( Action action )
+		{
+			// Warm up JIT
+			action();
+
+			// Try our best to ensure GC doesn't kick in or around action execution
+			GC.Collect();
+			long before = GC.GetAllocatedBytesForCurrentThread();
+			action();
+			long after = GC.GetAllocatedBytesForCurrentThread();
+
+			return before < after;
+		}
 	}
 }
