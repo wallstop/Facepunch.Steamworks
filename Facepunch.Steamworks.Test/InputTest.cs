@@ -26,7 +26,21 @@ namespace Steamworks
 				var astate = controller.GetAnalogState( "Move" );
 			}
 		}
-	}
 
+		[TestMethod]
+		public void ControllerListNoAlloc()
+		{
+			List<Controller> controllers = new List<Controller>();
+			SteamInput.GetControllerNoAlloc( controllers );
+			foreach ( var controller in controllers )
+			{
+				Console.Write( $"Controller: {controller}" );
+
+				var dstate = controller.GetDigitalState( "fire" );
+				var astate = controller.GetAnalogState( "Move" );
+			}
+			
+			CollectionAssert.AreEqual( SteamInput.Controllers.ToList(), controllers );
+		}
+	}
 }
- 
