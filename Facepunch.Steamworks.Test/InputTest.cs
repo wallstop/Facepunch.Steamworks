@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Steamworks.Data;
 
 namespace Steamworks
 {
@@ -15,6 +11,20 @@ namespace Steamworks
 	[DeploymentItem( "controller_config/game_actions_252490.vdf" )]
     public class InputTest
 	{
+		[ClassInitialize]
+		public static void ClassInitialize( TestContext context )
+		{
+			const bool explicitlyCallEveryFrame = true;
+			bool initialized = SteamInput.Init( explicitlyCallEveryFrame );
+			Assert.IsTrue( initialized );
+		}
+
+		[TestInitialize]
+		public void Setup()
+		{
+			SteamInput.RunFrame();
+		}
+
 		[TestMethod]
         public void ControllerList()
         {
@@ -39,7 +49,7 @@ namespace Steamworks
 				var dstate = controller.GetDigitalState( "fire" );
 				var astate = controller.GetAnalogState( "Move" );
 			}
-			
+=
 			CollectionAssert.AreEqual( SteamInput.Controllers.ToList(), controllers );
 		}
 

@@ -21,6 +21,14 @@ namespace Steamworks
 
 		internal const int STEAM_CONTROLLER_MAX_COUNT = 16;
 
+		/// <summary>
+		/// Must be called when starting use of the ISteamInput interface.
+		/// </summary>
+		public static bool Init( bool explicitlyCallRunFrame = false )
+		{
+			return Internal.Init( explicitlyCallRunFrame );
+		}
+
 
 		/// <summary>
 		/// You shouldn't really need to call this because it gets called by <see cref="SteamClient.RunCallbacks"/>
